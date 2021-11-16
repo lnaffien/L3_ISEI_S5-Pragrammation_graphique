@@ -103,7 +103,7 @@ void display()
     p2.push_back(vec2(0,2*h/3));
     p2.push_back(vec2(w,h/3));
 
-    for(unsigned int i=0;i<p2.size();i++)
+    for(unsigned int i = 0;i<p2.size();i++)
         window.draw_line(p1,p2[i],vec3(1,1,1));
 
 	//Draw what you want...

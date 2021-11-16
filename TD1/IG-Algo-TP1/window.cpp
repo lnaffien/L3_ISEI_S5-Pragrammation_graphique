@@ -127,17 +127,28 @@ void Window::antialiasing()
     // TODO => TP01
 }
 
+/* TD1, Exercice 1
+ * draw_line : dessine une ligne entre 2 points donnes, de la couleur donnee
+ * Paramètres : - p1 : vec2 : point 1 a l'extremite de la droite
+ *              - p2 : vec2 : point 2 a l'extremite de la droite
+ *              - c : vec3 : couleur du segment
+ */
 void Window::draw_line(vec2 p1, vec2 p2, vec3 c)
 {
-    // TODO => TP01
-    ivec2 d = abs(ivec2(p2 - p1));
+    // x : valeur horizontale
+    // y : valeur verticale
     int x1 = ( int)p1.x;
     int y1 = ( int)p1.y;
     int x2 = ( int)p2.x;
     int y2 = ( int)p2.y;
-    int xinc = (p2.x>p1.x)?1: -1;
-    int yinc = (p2.y>p1.y)?1: -1;
-    if(d.x >d.y)
+
+    // norme (=longueur) du vecteur
+    ivec2 d = abs(ivec2(p2 - p1));
+
+    int xinc = (p2.x>p1.x)?1: -1; // x2 est-il après x1 sur le plan horizontal ?
+    int yinc = (p2.y>p1.y)?1: -1; // y2 est-il après y1 sur le plan vertical ?
+
+    if(d.x > d.y)
     {
         int e = -d.x;
         int x = (x1 <x2)?x1:x2;
@@ -180,6 +191,7 @@ void Window::draw_line(vec2 p1, vec2 p2, vec3 c)
             }
         }
     }
+
 }
 
 void Window::draw_circle(vec2 center, unsigned int r, vec3 c)
@@ -333,6 +345,27 @@ void Window::draw_circle(vec2 center, unsigned int r, vec3 c)
         }
         draw_circle_parts(vec2(x, y), center , c);
         x = x + 1;
+    }
+}
+
+void Window::antialiasing()
+{
+    vec3 color;
+    for( int x=0; x<width -sample ; x+= sample )
+    {
+        for( int y=0; y<height -sample ; y+= sample)
+        {
+            for( int i=0; i< sample ; i++)
+            {
+                for( int j=0; j<sample ; j++)
+                {
+                    color += get_pixel(vec2(x+i, y+j));
+                }
+            }
+            color /= sample *sample ;
+            draw_pixel_sampled(vec2(x/sample , y/sample ), color);
+            color = vec3();
+        }
     }
 }
 
