@@ -122,9 +122,28 @@ void Window::reshape(int w, int h)
 	}
 }
 
+/* TD1, Exercice 2
+ * antialiasing : correction des potentiels effets d
+ */
 void Window::antialiasing()
 {
-    // TODO => TP01
+    vec3 color;
+    for( int x=0; x<width -sample ; x+= sample )
+    {
+        for( int y=0; y<height -sample ; y+= sample)
+        {
+            for( int i=0; i< sample ; i++)
+            {
+                for( int j=0; j<sample ; j++)
+                {
+                    color += get_pixel(vec2(x+i, y+j));
+                }
+            }
+            color /= sample *sample ;
+            draw_pixel_sampled(vec2(x/sample , y/sample ), color);
+            color = vec3();
+        }
+    }
 }
 
 /* TD1, Exercice 1
@@ -255,63 +274,9 @@ float Window::c2f(unsigned char c)
 /*
 CORRECTION :
 
-void Window::draw_line(vec2 p1, vec2 p2, vec3 c)
-{
-    ivec2 d = abs(ivec2(p2 - p1));
-    int x1 = ( int)p1.x;
-    int y1 = ( int)p1.y;
-    int x2 = ( int)p2.x;
-    int y2 = ( int)p2.y;
-    int xinc = (p2.x>p1.x)?1: -1;
-    int yinc = (p2.y>p1.y)?1: -1;
-    if(d.x >d.y)
-    {
-        int e = -d.x;
-        int x = (x1 <x2)?x1:x2;
-        int y = (x1 <x2)?y1:y2;
-        if(x2 <x1)
-        {
-            yinc = -yinc;
-        }
-        for( int i=0; i<=d.x; i++)
-        {
-            draw_pixel(vec2(x,y), c);
-            e += 2*d.y;
-            x++;
+window.draw_circle(vec2(w/2,h/2),w/3,vec3(1,0,0));
 
-            if(e > 0)
-            {
-                y += yinc;
-                e -= 2*d.x;
-            }
-        }
-    }
-    else
-    {
-        int e = -d.y;
-        int x = (y1 <y2)?x1:x2;
-        int y = (y1 <y2)?y1:y2;
-        if(y2 <y1)
-        {
-            xinc = -xinc;
-        }
-        for( int i=0; i<=d.y; i++)
-        {
-            draw_pixel(vec2(x,y), c);
-            e += 2*d.x;
-            y++;
-            if(e > 0)
-            {
-                x += xinc;
-                e -= 2*d.y;
-            }
-        }
-    }
-}
-
-      window.draw_circle(vec2(w/2,h/2),w/3,vec3(1,0,0));
-
-    window.draw_circle(vec2(centre x , centre y), rayon ,vec3(1,0,0));
+window.draw_circle(vec2(centre x , centre y), rayon ,vec3(1,0,0));
 
 
 void Window::draw_circle_parts(vec2 p, vec2 center, vec3 c)
@@ -345,27 +310,6 @@ void Window::draw_circle(vec2 center, unsigned int r, vec3 c)
         }
         draw_circle_parts(vec2(x, y), center , c);
         x = x + 1;
-    }
-}
-
-void Window::antialiasing()
-{
-    vec3 color;
-    for( int x=0; x<width -sample ; x+= sample )
-    {
-        for( int y=0; y<height -sample ; y+= sample)
-        {
-            for( int i=0; i< sample ; i++)
-            {
-                for( int j=0; j<sample ; j++)
-                {
-                    color += get_pixel(vec2(x+i, y+j));
-                }
-            }
-            color /= sample *sample ;
-            draw_pixel_sampled(vec2(x/sample , y/sample ), color);
-            color = vec3();
-        }
     }
 }
 
