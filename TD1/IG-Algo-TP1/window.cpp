@@ -216,6 +216,24 @@ void Window::draw_line(vec2 p1, vec2 p2, vec3 c)
 void Window::draw_circle(vec2 center, unsigned int r, vec3 c)
 {
     // TODO => TP01
+    int x = 0;
+    int y = r;
+    int e = 1 - ( double )r;
+    draw_circle_parts(vec2(x, y), center , c);
+    while(y>x)
+    {
+        if(e < 0)
+        {
+            e = e + 2*x + 3;
+        }
+        else
+        {
+            e = e + 2*x - 2*y + 5;
+            y = y - 1;
+        }
+        draw_circle_parts(vec2(x, y), center , c);
+        x = x + 1;
+    }
 }
 
 void Window::draw_circle_parts(vec2 p, vec2 center, vec3 c)

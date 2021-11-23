@@ -511,3 +511,8 @@
 1637584524 source:/home/lucie/Travail/L3_ISEI_S5-Programmation_graphique/TD1/IG-Algo-TP1/object.cpp
 	"object.hpp"
 
+1637657450 source:/home/lnaffien/S5/L3_ISEI_S5-Programmation_graphique/TD1/IG-Algo-TP1/window.cpp
+	<limits>
+	<math.h>
+	"window.hpp"
+

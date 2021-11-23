@@ -106,6 +106,7 @@ void display()
     for(unsigned int i = 0;i<p2.size();i++)
         window.draw_line(p1,p2[i],vec3(1,1,1));
 
+    window.draw_circle(vec2(w/2,h/2),w/3,vec3(1,0,0));
 	//Draw what you want...
 	/*** TP02 ***
 	myobject.draw_method = DRAW_WIRE;
