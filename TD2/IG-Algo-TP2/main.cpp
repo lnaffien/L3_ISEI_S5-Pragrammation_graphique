@@ -14,7 +14,7 @@ void reshape(int, int);
 void keyboard_down(unsigned char, int, int);
 
 mat4 transformation_matrix(double, double, double, vec3);
-mat4 projection_matrix(double);
+mat4x3 projection_matrix(double);
 void load_box(Object &);
 void load_sphere(Object &);
 
@@ -24,7 +24,7 @@ vec4 light(0.5773, 0.5773, -0.5773, 0);
 
 int main(int argc, char** argv)
 {
-	//load_box(myobject);
+	load_box(myobject);
 	load_sphere(myobject);
 
 	glutInit(&argc, argv);
@@ -76,7 +76,7 @@ void display()
 	//***Code to uncomment after TP01 ***
 	vec3 trans(0.0f, 0.0f, -800.0f);
 	mat4 trans_matrix = transformation_matrix(angle, angle, angle, trans);
-	mat4 proj_matrix = projection_matrix(1000.0f);
+	mat4x3 proj_matrix = projection_matrix(1000.0f);
 	angle += 0.25;
 
 	myobject.update_transformation(trans_matrix);
@@ -107,55 +107,110 @@ void display()
  *              - translation : vec3 : translation dans la transformation
  * Retour : mat4 : matrice combinant les rotations et les translations
  */
-
 mat4 transformation_matrix(double pitch, double yaw, double roll, vec3 translation)
 {
-	// TODO => TP02 //
 	/*1. multiplier par la matrice de transformation pour le positionner
 	* 2. calculer la matrice de rotation : truc avec les cos et sin
+	// rot_x_matrix[colonne][ligne] = ...
 	*/
-	int width = 150;
-	int height = 150;
+
+	/*mat4 m_translation;
+    m_translation[0][0] = translation.x;
+    m_translation[0][1] = translation.y;
+    m_translation[0][2] = translation.z;
+    m_translation[0][3] = 1;
+    */
 
 	double rad_pitch = pitch * (M_PI / 180);
 	double rad_yaw = yaw * (M_PI / 180);
 	double rad_roll = roll * (M_PI / 180);
 
-	// rot_x_matrix[colonne][ligne] = ...
+    mat4 r_x;
+    mat4 r_y;
+    mat4 r_z;
 
-	mat4 m_rotation_x = mat4 (cos(rad_pitch), -sin(rad_pitch), 0.0, 0.0,
+    r_x[1 ][1] = cos(rad_pitch);
+    r_x[2][1] = -sin(rad_pitch);
+    r_x[1][2] = sin(rad_pitch);
+    r_x[2][2] = cos(rad_pitch);
+
+    r_y[0][0] = cos(rad_yaw);
+    r_y[2][0] = sin(rad_yaw);
+    r_y[0][2] = -sin(rad_yaw);
+    r_y[2][2] = cos(rad_yaw);
+
+    r_z[0][0] = cos(rad_roll);
+    r_z[1][0] = -sin(rad_roll);
+    r_z[0][1] = sin(rad_roll);
+    r_z[1][1] = cos(rad_roll);
+
+
+    /*
+    mat4 m_rotation_x = mat4(1.0, 0.0, 0.0, 0.0,
+                            0.0, cos(rad_pitch), -sin(rad_pitch), 0.0,
+                            0.0, sin(rad_pitch), cos(rad_pitch), 0.0,
+                            0.0, 0.0, 0.0, 1.0)
+                    * mat4(cos(rad_pitch), 0.0, sin(rad_pitch), 0.0,
+                            0.0, 1.0, 0.0, 0.0,
+                            -sin(rad_pitch), 0.0, cos(rad_pitch), 0.0,
+                            0.0, 0.0, 0.0, 1.0)
+                    * mat4(cos(rad_pitch), -sin(rad_pitch), 0.0, 0.0,
                             sin(rad_pitch), cos(rad_pitch), 0.0, 0.0,
-                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 0.0, 1.0,
                             0.0, 0.0, 0.0, 1.0);
-    mat4 m_rotation_y = mat4 (cos(rad_yaw), -sin(rad_yaw), 0.0, 0.0,
+
+    mat4 m_rotation_y = mat4(1.0, 0.0, 0.0, 0.0,
+                            0.0, cos(rad_yaw), -sin(rad_yaw), 0.0,
+                            0.0, sin(rad_yaw), cos(rad_yaw), 0.0,
+                            0.0, 0.0, 0.0, 1.0)
+                    * mat4(cos(rad_yaw), 0.0, sin(rad_yaw), 0.0,
+                            0.0, 1.0, 0.0, 0.0,
+                            -sin(rad_yaw), 0.0, cos(rad_yaw), 0.0,
+                            0.0, 0.0, 0.0, 1.0)
+                    * mat4(cos(rad_yaw), -sin(rad_yaw), 0.0, 0.0,
                             sin(rad_yaw), cos(rad_yaw), 0.0, 0.0,
-                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 0.0, 1.0,
                             0.0, 0.0, 0.0, 1.0);
-    mat4 m_rotation_z = mat4 (cos(rad_roll), -sin(rad_roll), 0.0, 0.0,
+
+    mat4 m_rotation_z = mat4(1.0, 0.0, 0.0, 0.0,
+                            0.0, cos(rad_roll), -sin(rad_roll), 0.0,
+                            0.0, sin(rad_roll), cos(rad_roll), 0.0,
+                            0.0, 0.0, 0.0, 1.0)
+                    * mat4(cos(rad_roll), 0.0, sin(rad_roll), 0.0,
+                            0.0, 1.0, 0.0, 0.0,
+                            -sin(rad_roll), 0.0, cos(rad_roll), 0.0,
+                            0.0, 0.0, 0.0, 1.0)
+                    * mat4(cos(rad_roll), -sin(rad_roll), 0.0, 0.0,
                             sin(rad_roll), cos(rad_roll), 0.0, 0.0,
-                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 0.0, 1.0,
                             0.0, 0.0, 0.0, 1.0);
-
-    mat4 m_rotation = m_rotation_x * m_rotation_y * m_rotation_z;
-
-//    mat4 m_translation_x = m_rotation * mat4(translation.x, translation.y, translation.z, 1);
+    */
 
 
-	return mat4(0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0);
+
+    mat4 m_rotation = r_x * r_y * r_z;
+
+    m_rotation[3][0]= translation.x;
+    m_rotation[3][1]= translation.y;
+    m_rotation[3][2]= translation.z;
+
+	return m_rotation;
 }
 
-/*
+/* TD2, Exercice 2
  * Parametre : focal : double : focale de la matrice de projection
  * Retour : mat4 : matrice permettant la projection des sommets
  */
-mat4 projection_matrix(double focal)
+mat4x3 projection_matrix(double focal)
 {
-	// TODO => TP02 //
-	mat4x3 m_proj;
-	return mat4();
+	mat4x3 m_projection;
+	m_projection[0][0] = focal;
+	m_projection[2][0] = window.get_width()*window.get_sample() / 2;
+	m_projection[1][1] = focal;
+	m_projection[2][1] = window.get_height()*window.get_sample() / 2;
+
+
+	return m_projection;
 }
 
 void load_box(Object & o)

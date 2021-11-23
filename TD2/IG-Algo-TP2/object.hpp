@@ -35,7 +35,7 @@ class Object
 		std::vector<Face> faces;
 		type_draw draw_method;
 		void update_transformation(mat4);
-		void update_projection(mat4);
+		void update_projection(mat4x3);
 		void draw(Window &, vec4 light = vec4(-1000,0,0,0));
 		void backface_culling(mat4);
 };
