@@ -63,54 +63,9 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-    /*** TP01 ***/
-    /***Code to remove after TP01 ***/
-    int w = window.get_width()*window.get_sample();
-    int h = window.get_height()*window.get_sample();
-
-    window.draw_pixel(vec2(w/2,h/2),vec3(1,0,0));
-
-    //Complete test of the draw_line function
-    vec2 p1(w/2,h/2);
-    std::vector<vec2> p2;
-
-    //Horizontals
-    p2.push_back(vec2(w/2,h));
-    p2.push_back(vec2(w/2,0));
-
-    //Verticals
-    p2.push_back(vec2(0,h/2));
-    p2.push_back(vec2(w,h/2));
-
-    //Diagonals
-    p2.push_back(vec2(0,0));
-    p2.push_back(vec2(w,h));
-    p2.push_back(vec2(w,0));
-    p2.push_back(vec2(0,h));
-
-    p2.push_back(vec2(w/3,0));
-    p2.push_back(vec2(2*w/3,h));
-
-    p2.push_back(vec2(w,2*h/3));
-    p2.push_back(vec2(0,h/3));
-
-    p2.push_back(vec2(w/3,0));
-    p2.push_back(vec2(2*w/3,h));
-
-    p2.push_back(vec2(w/3,h));
-    p2.push_back(vec2(2*w/3,0));
-
-    p2.push_back(vec2(0,2*h/3));
-    p2.push_back(vec2(w,h/3));
-
-    for(unsigned int i = 0;i<p2.size();i++)
-        window.draw_line(p1,p2[i],vec3(1,1,1));
-
-    window.draw_circle(vec2(w/2,h/2),w/3,vec3(1,0,0));
-	//Draw what you want...
-	/*** TP02 ***
+	//*** TP02 ***
 	myobject.draw_method = DRAW_WIRE;
-	*/
+
 	/*** TP03 ***
 	myobject.draw_method = DRAW_FILL;
 	*/
@@ -118,7 +73,7 @@ void display()
 	myobject.draw_method = DRAW_LAMBERT;
 	myobject.draw_method = DRAW_GOURAUD;
 	*/
-	/***Code to uncomment after TP01 ***
+	//***Code to uncomment after TP01 ***
 	vec3 trans(0.0f, 0.0f, -800.0f);
 	mat4 trans_matrix = transformation_matrix(angle, angle, angle, trans);
 	mat4 proj_matrix = projection_matrix(1000.0f);
@@ -126,14 +81,14 @@ void display()
 
 	myobject.update_transformation(trans_matrix);
 	myobject.update_projection(proj_matrix);
-	*/
+
 	/*** TP03 ***
 	myobject.backface_culling(trans_matrix);
 	*/
 
-	/*** To uncomment after TP01 ***
+	//*** To uncomment after TP01 ***
 	myobject.draw(window, light);
-	*/
+
 
     /***Don't change anything from here***/
 	window.antialiasing();
@@ -144,15 +99,62 @@ void display()
 	window.clear();
 }
 
+/* TD2, Exercice 1
+ * transformation_matrix :
+ * Parametres : - pitch : double : angle de rotation x, en degres (=teta(x))
+ *              - yaw : double : angle de rotation y
+ *              - roll : double : angle de rotation z
+ *              - translation : vec3 : translation dans la transformation
+ * Retour : mat4 : matrice combinant les rotations et les translations
+ */
+
 mat4 transformation_matrix(double pitch, double yaw, double roll, vec3 translation)
 {
 	// TODO => TP02 //
-	return mat4();
+	/*1. multiplier par la matrice de transformation pour le positionner
+	* 2. calculer la matrice de rotation : truc avec les cos et sin
+	*/
+	int width = 150;
+	int height = 150;
+
+	double rad_pitch = pitch * (M_PI / 180);
+	double rad_yaw = yaw * (M_PI / 180);
+	double rad_roll = roll * (M_PI / 180);
+
+	// rot_x_matrix[colonne][ligne] = ...
+
+	mat4 m_rotation_x = mat4 (cos(rad_pitch), -sin(rad_pitch), 0.0, 0.0,
+                            sin(rad_pitch), cos(rad_pitch), 0.0, 0.0,
+                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 0.0, 1.0);
+    mat4 m_rotation_y = mat4 (cos(rad_yaw), -sin(rad_yaw), 0.0, 0.0,
+                            sin(rad_yaw), cos(rad_yaw), 0.0, 0.0,
+                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 0.0, 1.0);
+    mat4 m_rotation_z = mat4 (cos(rad_roll), -sin(rad_roll), 0.0, 0.0,
+                            sin(rad_roll), cos(rad_roll), 0.0, 0.0,
+                            0.0, 0.0, 1.0, 0.0,
+                            0.0, 0.0, 0.0, 1.0);
+
+    mat4 m_rotation = m_rotation_x * m_rotation_y * m_rotation_z;
+
+//    mat4 m_translation_x = m_rotation * mat4(translation.x, translation.y, translation.z, 1);
+
+
+	return mat4(0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 0.0);
 }
 
+/*
+ * Parametre : focal : double : focale de la matrice de projection
+ * Retour : mat4 : matrice permettant la projection des sommets
+ */
 mat4 projection_matrix(double focal)
 {
 	// TODO => TP02 //
+	mat4x3 m_proj;
 	return mat4();
 }
 

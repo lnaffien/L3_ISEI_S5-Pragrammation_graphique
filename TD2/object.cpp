@@ -8,6 +8,13 @@ void check_color(vec3 & color)
 
 void Object::update_transformation(mat4 m)
 {
+    vertices_transformed.clear();
+    //boucle pour chaque vertives
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        vec4 v_res = m * vertices[i];
+        vertices_transformed.push_back(v_res);
+    }
 	// TODO => TP02 //
 }
 
