@@ -6,6 +6,10 @@ void check_color(vec3 & color)
 	color = min(color, vec3(1.0, 1.0, 1.0));
 }
 
+/* TD2, Exercice 3
+ * update_transformation : met a jour les coordonnes des vertices transformees
+ * Parametre : m : mat4 : matrice de transformation
+ */
 void Object::update_transformation(mat4 m)
 {
 vertices_transformed.clear();
@@ -15,12 +19,14 @@ vertices_transformed.clear();
         vec4 v_res = m * vertices[i];
         vertices_transformed.push_back(v_res);
     }
-	// TODO => TP02 //
-	}
+}
 
+/* TD2, Exercice 4
+ * update_projection : met a jour les coordonnes des vertices projetees
+ * Parametre : m : mat4x3 : matrice de projection
+ */
 void Object::update_projection(mat4x3 m)
 {
-// TODO => TP02 //
 	vec3 v_out;
 	vertices_projected.clear();
 
@@ -31,12 +37,19 @@ void Object::update_projection(mat4x3 m)
 	}
 }
 
+/* TD2, Exercice 5
+ * draw : dessine l'objet
+ * Parametres - window : Window & : fenetre devant afficher l'objet
+ *            - light : vec4 :
+ */
 void Object::draw(Window & window, vec4 light)
 {
+    // Selection de la methode de dessin
 	for(unsigned int i=0; i<faces.size(); i++)
 	{
 		switch(draw_method)
 		{
+            // mode fil de fer
 			case DRAW_WIRE :
 				for(unsigned int x = 0; x < 4; x++)
                 {
